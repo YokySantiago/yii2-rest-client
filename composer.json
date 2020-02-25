@@ -1,0 +1,21 @@
+{
+    "name": "yokysantiago/yii2-rest-client",
+    "description": "This one is a Extension with curl to consume Rest APIs",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","rest","client"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Santiago Botero Ruiz",
+            "email": "boterosantiago6@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "yokysantiago\\ms\\rest\\client\\": ""
+        }
+    }
+}
