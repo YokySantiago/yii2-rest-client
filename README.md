@@ -28,4 +28,13 @@ Usage
 Once the extension is installed, simply use it in your code by  :
 
 ```php
-<?= \yokysantiago\ms\rest\client\AutoloadExample::widget(); ?>```
+/**
+ * Inicialización de clase
+ * 
+ * @param $strURL Url a la cual se consultará el servicio web
+ * @param $boolVerificarHostSSL verificación SSL en el Host
+ * @param $boolVerificarPeerSSL verificación SSL en el Host
+ * @param $esMultiCurl bool identificación de envio múltiple
+ */
+\yokysantiago\ms\rest\client\RESTServices('URL', 1,1);
+```
