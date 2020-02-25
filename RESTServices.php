@@ -42,12 +42,6 @@ class RESTServices
     private $arrCabeceras = array();
 
     /**
-     * @var $logFunction
-     * Indica si se tiene acceso a la funcion genérica de log_mensaje de adminfo
-     */
-    private $logFunction  = false;
-
-    /**
      * @var $curl
      * Variable en donde se encuentra la configuración realizada al CURL
      */
@@ -79,14 +73,13 @@ class RESTServices
      * @param $boolVerificarPeerSSL verificación SSL en el Host
      * @param $esMultiCurl bool identificación de envio múltiple
      * 
-     * @author Santiago Botero Ruiz <sbotero@solati.com.co> 
+     * @author Santiago Botero Ruiz <boterosantiago6@gmail.com> 
      */
-    public function inicializar($strURL, $boolVerificarHostSSL = 0, $boolVerificarPeerSSL = 0, $esMultiCurl = 0) {
+    public function __construct($strURL, $boolVerificarHostSSL = 0, $boolVerificarPeerSSL = 0, $esMultiCurl = 0) {
         $this->strURL = $strURL;
         $this->boolVerificarHostSSL = $boolVerificarHostSSL;
         $this->boolVerificarPeerSSL = $boolVerificarPeerSSL;
         $this->esMultiCurl = $esMultiCurl;
-        $this->logFunction = function_exists('log_mensaje');
         
         if( $this->esMultiCurl ) {
             $this->multiCurl = curl_multi_init();
@@ -104,7 +97,7 @@ class RESTServices
      * @param $variable Variable de CURL que debe ser parametrizada
      * @param $valor El valor de la variable de curl dada
      * 
-     * @author Santiago Botero Ruiz <sbotero@solati.com.co>
+     * @author Santiago Botero Ruiz <boterosantiago6@gmail.com>
      */
     public function setearVariable( $variable, $valor ) 
     {
@@ -116,14 +109,14 @@ class RESTServices
      * 
      * @param $arrCabeceras Cabeceras que se configuraran en la petición del web service
      * 
-     * @author Santiago Botero Ruiz <sbotero@solati.com.co>
+     * @author Santiago Botero Ruiz <boterosantiago6@gmail.com>
      */
     public function setearCabeceras ( $arrCabeceras = array() ) 
     {
         if( is_array($arrCabeceras) && !empty($arrCabeceras) ) {
             $this->arrCabeceras = $arrCabeceras;
-        } else if( $this->logFunction ) {
-            log_mensaje('info', 'RESTServices:: La cabecera de la petición al WS se encuentra vacia');
+        } else {
+            \Yii::log('RESTServices:: La cabecera de la petición al WS se encuentra vacia');
         }
     }
 
@@ -132,7 +125,7 @@ class RESTServices
      * 
      * @param $datos Datos enviados en la petición POST
      * 
-     * @author Santiago Botero Ruiz <sbotero@solati.com.co>
+     * @author Santiago Botero Ruiz <boterosantiago6@gmail.com>
      */
     public function obtenerInformacionPOST( $datos = array() )
     {
@@ -172,12 +165,10 @@ class RESTServices
                 $this->setearVariable(CURLOPT_POSTFIELDS, json_encode($datos));
             }
     
-            if ( $this->logFunction ) {
-                log_mensaje('debug', 'RESTServices:: Llamado de webservice POST');
-                log_mensaje('debug', 'WS CALL    : ' . $this->strURL);
-                log_mensaje('debug', 'WS Data    : ' . json_encode($datos));
-            }
-            
+            \Yii::log('RESTServices:: Llamado de webservice POST');
+            \Yii::log('WS CALL    : ' . $this->strURL);
+            \Yii::log('WS Data    : ' . json_encode($datos));
+        
             $respuesta = $this->ejecutarLlamado();
         }
 
@@ -189,7 +180,7 @@ class RESTServices
      * 
      * @param $datos Datos enviados en la petición GET
      * 
-     * @author Santiago Botero Ruiz <sbotero@solati.com.co>
+     * @author Santiago Botero Ruiz <boterosantiago6@gmail.com>
      */
     public function obtenerInformacionGET( $datos = array() )
     {
@@ -225,11 +216,9 @@ class RESTServices
                 $this->strURL =  $this->strURL . '?' . http_build_query($datos);
             }
     
-            if ( $this->logFunction ) {
-                log_mensaje('debug', 'RESTServices:: Llamado de webservice GET');
-                log_mensaje('debug', 'WS CALL    : ' . $this->strURL);
-                log_mensaje('debug', 'WS Data    : ' . $datos);
-            }
+            \Yii::log('RESTServices:: Llamado de webservice GET');
+            \Yii::log('WS CALL    : ' . $this->strURL);
+            \Yii::log('WS Data    : ' . $datos);
             
             $respuesta = $this->ejecutarLlamado();
         }
@@ -242,7 +231,7 @@ class RESTServices
      * 
      * @param $curl es la configuración de la ejecución de los servicios web cuando se da por múltiples envíos
      * 
-     * @author Santiago Botero Ruiz <sbotero@solati.com.co>
+     * @author Santiago Botero Ruiz <boterosantiago6@gmail.com>
      */
     private function ejecutarLlamado($curl = null)
     {
@@ -265,7 +254,7 @@ class RESTServices
                 $resultadoFinal[$key] = curl_multi_getcontent($value);
 
                 if ( !empty($resultadoFinal[$key]) ) {
-                    log_mensaje('error', "ERROR DE COMUNICACIÓN WS: " . curl_error($value));
+                    \Yii::log("ERROR DE COMUNICACIÓN WS: " . curl_error($value));
                 }
 
                 curl_multi_remove_handle($this->multiCurl, $value);
@@ -287,9 +276,7 @@ class RESTServices
             if( $this->boolRetornaInformacion ) {
 
                 if ($arrResult === false) {
-                    if ( $this->logFunction ) {
-                        log_mensaje('error', "ERROR DE COMUNICACIÓN WS: " . curl_error($this->curl));
-                    }
+                    \Yii::log("ERROR DE COMUNICACIÓN WS: " . curl_error($this->curl));
                     $respuesta =  array(
                         false, 
                         'Imposible consultar el WS solicitado.'
@@ -297,10 +284,7 @@ class RESTServices
                 }
         
                 $respuesta = $arrResult;
-
-                if ( $this->logFunction ) {
-                    log_mensaje('debug', "WS Response    : " . $respuesta);
-                }
+                \Yii::log("WS Response    : " . $respuesta);
             }
 
             $this->httpCode  = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
