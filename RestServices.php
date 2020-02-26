@@ -218,7 +218,7 @@ class RestServices
     
             \Yii::info('RESTServices:: Llamado de webservice GET');
             \Yii::info('WS CALL    : ' . $this->strURL);
-            \Yii::info('WS Data    : ' . $datos);
+            \Yii::info('WS Data    : ' . json_encode($datos));
             
             $respuesta = $this->ejecutarLlamado();
         }
