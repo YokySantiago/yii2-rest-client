@@ -2,7 +2,7 @@
 
 namespace yokysantiago\ms\rest\client;
 
-class RESTServices 
+class RestServices 
 {
 
     /**
@@ -89,7 +89,7 @@ class RESTServices
             $this->multiCurl = null;
         }
 
-    }
+    }   
 
     /**
      * Método que configura una variable en el CURL inicializado
@@ -102,6 +102,7 @@ class RESTServices
     public function setearVariable( $variable, $valor ) 
     {
         curl_setopt($this->curl, $variable, $valor );
+        return $this;
     }
 
     /**
@@ -115,9 +116,8 @@ class RESTServices
     {
         if( is_array($arrCabeceras) && !empty($arrCabeceras) ) {
             $this->arrCabeceras = $arrCabeceras;
-        } else {
-            \Yii::log('RESTServices:: La cabecera de la petición al WS se encuentra vacia');
         }
+        return $this;
     }
 
     /**
@@ -293,6 +293,9 @@ class RESTServices
         return $respuesta;
     }
 
+    /**
+     * Método que retorna el código devuelto por el consumo del WS
+     */
     public function obtenerHttpCode() 
     {
         return $this->httpCode;
