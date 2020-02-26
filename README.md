@@ -37,7 +37,7 @@ use \yokysantiago\ms\rest\client\RESTServices;
  * 3er parámetro boolean verificación SSL en el Host (opcional)
  * 4to parámetro boolean identificación de envio múltiple (opcional)
  */
-$resultado = \yokysantiago\ms\rest\client\RESTServices('https://example.com/v1/api', 1,1)
+$resultado = (new \yokysantiago\ms\rest\client\RESTServices('https://example.com/v1/api', 1,1))
             ->setearCabeceras([
                 'Authorization' => 'Bearer tokenExample',
                 'Content-Type' => 'application/json'
