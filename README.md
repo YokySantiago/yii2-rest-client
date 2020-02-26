@@ -1,40 +1,49 @@
 Rest Client
 ===========
-This one is a Extension with curl to consume Rest APIs
+Esta extensión es ayuda a consumir servicios API REST (GET, POST) con curl
 
 Installation
 ------------
 
-The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
+La forma preferida para instalar esta extensión es mediante [composer](http://getcomposer.org/download/).
 
-Either run
+Ejecutando
 
 ```
 php composer.phar require --prefer-dist yokysantiago/yii2-rest-client "*"
 ```
 
-or add
+o agregando
 
 ```
 "yokysantiago/yii2-rest-client": "*"
 ```
 
-to the require section of your `composer.json` file.
+a la sección de require en su archivo `composer.json`.
 
 
-Usage
+Uso
 -----
 
-Once the extension is installed, simply use it in your code by  :
+Una vez instalada la extensión, simplemente usela en su código así:
 
 ```php
+
+use \yokysantiago\ms\rest\client\RESTServices;
+
 /**
- * Inicialización de clase
- * 
- * @param $strURL Url a la cual se consultará el servicio web
- * @param $boolVerificarHostSSL verificación SSL en el Host
- * @param $boolVerificarPeerSSL verificación SSL en el Host
- * @param $esMultiCurl bool identificación de envio múltiple
+ * 1er parámetro string Url a la cual se consultará el servicio web (requerido)
+ * 2do parámetro boolean verificación SSL en el Host (opcional)
+ * 3er parámetro boolean verificación SSL en el Host (opcional)
+ * 4to parámetro boolean identificación de envio múltiple (opcional)
  */
-\yokysantiago\ms\rest\client\RESTServices('URL', 1,1);
+$resultado = \yokysantiago\ms\rest\client\RESTServices('https://example.com/v1/api', 1,1)
+            ->setearCabeceras([
+                'Authorization' => 'Bearer tokenExample',
+                'Content-Type' => 'application/json'
+            ])
+            ->obtenerInformacionPOST([
+                'id' => 1,
+                'name' => 'Test'
+            ]);
 ```
