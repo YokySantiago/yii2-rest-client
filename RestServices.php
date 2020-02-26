@@ -165,9 +165,9 @@ class RestServices
                 $this->setearVariable(CURLOPT_POSTFIELDS, json_encode($datos));
             }
     
-            \Yii::log('RESTServices:: Llamado de webservice POST');
-            \Yii::log('WS CALL    : ' . $this->strURL);
-            \Yii::log('WS Data    : ' . json_encode($datos));
+            \Yii::info('RESTServices:: Llamado de webservice POST');
+            \Yii::info('WS CALL    : ' . $this->strURL);
+            \Yii::info('WS Data    : ' . json_encode($datos));
         
             $respuesta = $this->ejecutarLlamado();
         }
@@ -216,9 +216,9 @@ class RestServices
                 $this->strURL =  $this->strURL . '?' . http_build_query($datos);
             }
     
-            \Yii::log('RESTServices:: Llamado de webservice GET');
-            \Yii::log('WS CALL    : ' . $this->strURL);
-            \Yii::log('WS Data    : ' . $datos);
+            \Yii::info('RESTServices:: Llamado de webservice GET');
+            \Yii::info('WS CALL    : ' . $this->strURL);
+            \Yii::info('WS Data    : ' . $datos);
             
             $respuesta = $this->ejecutarLlamado();
         }
@@ -254,7 +254,7 @@ class RestServices
                 $resultadoFinal[$key] = curl_multi_getcontent($value);
 
                 if ( !empty($resultadoFinal[$key]) ) {
-                    \Yii::log("ERROR DE COMUNICACIÓN WS: " . curl_error($value));
+                    \Yii::info("ERROR DE COMUNICACIÓN WS: " . curl_error($value));
                 }
 
                 curl_multi_remove_handle($this->multiCurl, $value);
@@ -276,7 +276,7 @@ class RestServices
             if( $this->boolRetornaInformacion ) {
 
                 if ($arrResult === false) {
-                    \Yii::log("ERROR DE COMUNICACIÓN WS: " . curl_error($this->curl));
+                    \Yii::info("ERROR DE COMUNICACIÓN WS: " . curl_error($this->curl));
                     $respuesta =  array(
                         false, 
                         'Imposible consultar el WS solicitado.'
@@ -284,7 +284,7 @@ class RestServices
                 }
         
                 $respuesta = $arrResult;
-                \Yii::log("WS Response    : " . $respuesta);
+                \Yii::info("WS Response    : " . $respuesta);
             }
 
             $this->httpCode  = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
