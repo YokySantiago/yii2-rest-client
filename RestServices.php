@@ -121,6 +121,61 @@ class RestServices
     }
 
     /**
+     * Método que realiza el llamado de un servicio web mediante PUT
+     * 
+     * @param $datos Datos enviados en la petición PUT
+     * 
+     * @author Santiago Botero Ruiz <boterosantiago6@gmail.com>
+     */
+    public function obtenerInformacionPUT( $datos = array() )
+    {
+        $this->boolPost = 1;
+        $this->boolRetornaInformacion = 1;
+
+        if( $this->esMultiCurl ) {
+            $curl = array();
+            foreach ($datos as $key => $value) {
+
+                $this->curl = curl_init();
+
+                $this->setearVariable(CURLOPT_URL, $strURL);
+                $this->setearVariable(CURLOPT_SSL_VERIFYHOST, $this->boolVerificarHostSSL);
+                $this->setearVariable(CURLOPT_SSL_VERIFYPEER, $this->boolVerificarPeerSSL);
+                $this->setearVariable(CURLOPT_CUSTOMREQUEST, 'PUT');
+                $this->setearVariable(CURLOPT_RETURNTRANSFER, $this->boolRetornaInformacion);
+                
+                if ( !empty($datos) ) {
+                    $this->setearVariable(CURLOPT_POSTFIELDS, $datos);
+                }
+
+                if( isset($this->arrCabeceras) ) {
+                    $this->setearVariable(CURLOPT_HTTPHEADER, $this->arrCabeceras);
+                }
+
+                curl_multi_add_handle($this->multiCurl, $this->curl);
+                array_push($curl, $this->curl);
+            }
+
+            $respuesta = $this->ejecutarLlamado($curl);
+        } else {
+            $this->setearVariable(CURLOPT_CUSTOMREQUEST, 'PUT');
+            $this->setearVariable(CURLOPT_RETURNTRANSFER, $this->boolRetornaInformacion);
+
+            if ( !empty($datos) ) {
+                $this->setearVariable(CURLOPT_POSTFIELDS, json_encode($datos));
+            }
+    
+            \Yii::info('RESTServices:: Llamado de webservice PUT');
+            \Yii::info('WS CALL    : ' . $this->strURL);
+            \Yii::info('WS Data    : ' . json_encode($datos));
+        
+            $respuesta = $this->ejecutarLlamado();
+        }
+
+        return $respuesta;
+    }
+
+    /**
      * Método que realiza el llamado de un servicio web mediante POST
      * 
      * @param $datos Datos enviados en la petición POST
